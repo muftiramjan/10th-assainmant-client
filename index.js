@@ -33,13 +33,7 @@ async function run() {
     const sportcollection = client.db("sportDB").collection("sport");
     const cartCollection = client.db("userDB").collection("cartCollection");
     const ditailsCollection = client.db("ditailsDB").collection("ditailsCollection");
-    // const Listcolllection = client.db("ListDB").collection("ListCollection");
-    // const haiku = sportcollection.collection("sport");
-
-
-
-
-    
+  
     app.get('/ditails', async(req,res)=>{
       const cursor = ditailsCollection.find();
       const result = await cursor.toArray();
