@@ -87,6 +87,23 @@ async function run() {
           })
 app.put('/updateSpot/:id',async(req,res) =>{
   console.log(req.params.id);
+  const query={_id: new ObjectId (req.params.id)}
+  const data ={
+    $set:{
+      useimageURL:req.body.useimageURL,
+      tourists_spot_name:req.body.tourists_spot_name,
+      country_Name:req.body.country_Name,
+      location:req.body.location,
+      shortdescription:req.body.shortdescription,
+      average_cost:req.body.average_cost,
+      seasonality:req.body.seasonality,
+      travel_time:req.body.travel_time,
+      totaVisitorsPerYear:req.body.totaVisitorsPerYear,
+    }
+  }
+  const result = await sportcollection.updateOne(query,data)
+  console.log(result);
+  res.send(result)
 })
 
     // Send a ping to confirm a successful connection
