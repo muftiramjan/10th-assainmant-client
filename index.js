@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const app =express();
-const port =process.env.PORT || 5000 ;
+const app = express();
+const port = process.env.PORT || 5000;
 
 // meddleware
 app.use(cors());
@@ -28,13 +28,13 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+
 
     const sportcollection = client.db("sportDB").collection("sport");
     const cartCollection = client.db("userDB").collection("cartCollection");
     const ditailsCollection = client.db("ditailsDB").collection("ditailsCollection");
-  
-    app.get('/ditails', async(req,res)=>{
+
+    app.get('/ditails', async (req, res) => {
       const cursor = ditailsCollection.find();
       const result = await cursor.toArray();
       res.send(result)
@@ -43,42 +43,52 @@ async function run() {
 
 
 
-    app.get('/singleUser/:id', async(req,res)=>{
+    app.get('/singleUser/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const query = { _id: new ObjectId(id) }
       const result = await cartCollection.findOne(query);
       res.send(result)
     })
 
-    
-    app.get('/user', async(req,res)=>{
+
+    app.get('/user', async (req, res) => {
       const cursor = cartCollection.find();
       const result = await cursor.toArray();
       res.send(result)
     })
 
 
-app.get("/sport/:email", async(req,res) =>{
-  console.log(req.params.email);
-  const result = await sportcollection.findOne({email:req.params.email}).toArray();
-  res.send(result);
-})
 
-    app.get('/sport',  async(req,res)=> {
+
+    app.get('/sport', async (req, res) => {
       const cursor = sportcollection.find();
-      const result= await cursor.toArray();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    app.get("/sport/:email", async (req, res) => {
+      console.log(req.params.email);
+      const result = await sportcollection.find({
+        UserEmail: req.params.email
+      }).toArray();
       res.send(result);
     })
 
-    app.post('/sport', async(req,res) =>{
+    app.post('/sport', async (req, res) => {
       const newSport = req.body;
       console.log(newSport);
       const result = await sportcollection.insertOne(newSport)
       res.send(result)
     })
+    app.get('/Singelspot/:id', async (req, res) => {
+      console.log(req.params.id);
+      const result= await sportcollection.findOne({_id:new ObjectId (req.params.id)})
+      console.log(result);
+      res.send(result)
+          })
+app.put('/updateSpot/:id',async(req,res) =>{
+  console.log(req.params.id);
+})
 
-
-    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -92,10 +102,10 @@ run().catch(console.dir);
 
 
 
-app.get('/', (req,res) => {
-    res.send('coffe making is comigin son')
+app.get('/', (req, res) => {
+  res.send('coffe making is comigin son')
 })
 
-app.listen(port , () => {
-    console.log(`coffe srver is ranig ${port}`)
+app.listen(port, () => {
+  console.log(`coffe srver is ranig ${port}`)
 })
