@@ -40,26 +40,17 @@ async function run() {
       res.send(result)
     })
 
-
-
-
     app.get('/singleUser/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
       const result = await cartCollection.findOne(query);
       res.send(result)
     })
-
-
     app.get('/user', async (req, res) => {
       const cursor = cartCollection.find();
       const result = await cursor.toArray();
       res.send(result)
     })
-
-
-
-
     app.get('/sport', async (req, res) => {
       const cursor = sportcollection.find();
       const result = await cursor.toArray();
