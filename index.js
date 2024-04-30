@@ -91,15 +91,11 @@ app.put('/updateSpot/:id',async(req,res) =>{
     }
   }
   const result = await sportcollection.updateOne(query,data)
-  // console.log(result);
+ 
   res.send(result)
 })
-
-
 app.delete('/delete/:id',async(req,res)  => {
   const result =await sportcollection.deleteOne({_id: new ObjectId (req.params.id)})
-
-  // console.log(result);
   res.send(result)
 })
 
