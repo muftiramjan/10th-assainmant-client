@@ -5,11 +5,20 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+//Must remove "/" from your production URL
+app.use(cors({
+    origin: [
+      // "http://localhost:5173",
+      "https://tenassaimant.web.app",
+      "https://tenassaimant.firebaseapp.com",
+    ],
+    credentials: true,
+  })
+);
+
+
+// app.use(cors());
 app.use(express.json())
-// pass
-// CofeHouse
-// mPWgtnjxGUFFP6Em
 
 const uri = `mongodb+srv://${process.env.DV_USER}:${process.env.DV_PASS}@cluster0.pyzkzxp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 console.log(uri);
@@ -29,9 +38,27 @@ async function run() {
 
 
     const sportcollection = client.db("sportDB").collection("sport");
+    const sportcollection2 = client.db("sportDB").collection("sport2");
+    const sportcollection3 = client.db("sportDB").collection("cuntrise");
+    const sportcollection4 = client.db("sportDB").collection("cuntrises");
     const cartCollection = client.db("userDB").collection("cartCollection");
     const ditailsCollection = client.db("ditailsDB").collection("ditailsCollection");
 
+    app.get('/cuntrises', async (req, res) => {
+      const cursor = sportcollection4.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+    app.get('/cuntrise', async (req, res) => {
+      const cursor = sportcollection3.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+    app.get('/touristspots/:countryName', async (req, res) => {
+      const { countryName } = req.params;
+      const spots = await sportcollection4.find({ country_Name: countryName }).toArray();
+      res.send(spots);
+  });
     app.get('/ditails', async (req, res) => {
       const cursor = ditailsCollection.find();
       const result = await cursor.toArray();
@@ -54,8 +81,27 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
-    app.get("/sport/:email", async (req, res) => {
-      console.log(req.params.email);
+    
+    app.get('/singleSport/:id', async (req, res) => {
+      const id =req.params.id;
+      const query ={_id: new ObjectId(id)};
+      const sport =await sportcollection.findOne(query)
+      res.send(sport)
+    })
+    app.get('/sport2', async (req, res) => {
+      const cursor = sportcollection2.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    app.get('/sport2/:id', async (req, res) => {
+      const id =req.params.id;
+      const query ={_id: new ObjectId(id)};
+      const sport =await sportcollection2.findOne(query)
+      res.send(sport)
+    })
+
+    app.get("/sportByEmail/:email", async (req, res) => {
+      // console.log(req.params.email);
       const result = await sportcollection.find({
         UserEmail: req.params.email
       }).toArray();
@@ -64,7 +110,6 @@ async function run() {
 
     app.post('/sport', async (req, res) => {
       const newSport = req.body;
-      console.log(newSport);
       const result = await sportcollection.insertOne(newSport)
       res.send(result)
     })
@@ -113,9 +158,9 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-  res.send('coffe making is comigin son')
+  res.send('Tourism Management comming son')
 })
 
 app.listen(port, () => {
-  console.log(`coffe srver is ranig ${port}`)
+  console.log(`Tourism Management  srver is ranig ${port}`)
 })
